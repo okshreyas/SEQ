@@ -1,0 +1,15 @@
+If you want to select all columns but only the latest distinct values based on a specific column, you can use the `ROW_NUMBER()` window function in combination with the `PARTITION BY` clause. Here's an example assuming you have a column named `feedback_date` to determine the latest entry:
+
+```sql
+SELECT *
+FROM (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY your_column ORDER BY feedback_date DESC) as row_num
+    FROM your_table
+) AS ranked
+WHERE row_num = 1;
+```
+
+Replace `your_column` and `your_table` with the actual column and table names you're working with.
+
+This query assigns a row number to each row within each partition of your specified column, ordered by the `feedback_date` in descending order. Then, it selects only the rows where the row number is 1, indicating the latest entry within each distinct value of the specified column.
